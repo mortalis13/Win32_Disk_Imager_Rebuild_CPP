@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>480</width>
-    <height>303</height>
+    <height>300</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,7 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>425</width>
+    <width>480</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>480</width>
     <height>300</height>
    </size>
   </property>
@@ -245,6 +251,9 @@
         <property name="text">
          <string>Read Only Allocated Partitions</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -335,7 +344,7 @@
          <string>Read data from 'Device' to 'Image File'</string>
         </property>
         <property name="text">
-         <string>Read</string>
+         <string>Read (F1)</string>
         </property>
        </widget>
       </item>
@@ -351,7 +360,7 @@
          <string>Write data from 'Image File' to 'Device'</string>
         </property>
         <property name="text">
-         <string>Write</string>
+         <string>Write (F2)</string>
         </property>
        </widget>
       </item>
@@ -377,7 +386,7 @@
          <string>Exit Win32 Disk Imager</string>
         </property>
         <property name="text">
-         <string>Exit</string>
+         <string>Exit (ESC)</string>
         </property>
        </widget>
       </item>
@@ -385,7 +394,11 @@
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

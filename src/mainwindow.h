@@ -47,6 +47,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
         void closeEvent(QCloseEvent *event);
         enum Status {STATUS_IDLE=0, STATUS_READING, STATUS_WRITING, STATUS_VERIFYING, STATUS_EXIT, STATUS_CANCELED};
         bool nativeEvent(const QByteArray &type, void *vMsg, long *result);
+        void setImagePath(QString imagePath);
+        
     protected slots:
         void on_tbBrowse_clicked();
         void on_bCancel_clicked();
@@ -58,10 +60,12 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 private slots:
         void on_cboxHashType_IdxChg();
         void on_bHashGen_clicked();
+        void filePathTextChanged(QString);
 protected:
         MainWindow(QWidget* = NULL);
 private:
         static MainWindow* instance;
+        void addShortcuts();
         // find attached devices
         void getLogicalDrives();
         void setReadWriteButtonState();
@@ -83,6 +87,8 @@ private:
         QClipboard *clipboard;
         void generateHash(char *filename, int hashish);
         QString myHomeDir;
+        QString imagePath = "";
+        bool warnBeforeWrite = false;
 };
 
 #endif // MAINWINDOW_H

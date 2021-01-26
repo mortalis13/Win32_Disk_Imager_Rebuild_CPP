@@ -42,6 +42,11 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
 
     MainWindow* mainwindow = MainWindow::getInstance();
+    if (argc > 1) {
+      QString imagePath(argv[1]);
+      qDebug() << "using imagePath param: '" + imagePath + "'";
+      mainwindow->setImagePath(imagePath);
+    }
     mainwindow->show();
     return app.exec();
 }

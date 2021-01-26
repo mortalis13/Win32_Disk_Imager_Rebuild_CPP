@@ -65,6 +65,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     cboxHashType->addItem("SHA1",QVariant(QCryptographicHash::Sha1));
     cboxHashType->addItem("SHA256",QVariant(QCryptographicHash::Sha256));
     connect(this->cboxHashType, SIGNAL(currentIndexChanged(int)), SLOT(on_cboxHashType_IdxChg()));
+    connect(this->leFile, SIGNAL(textChanged(QString)), SLOT(filePathTextChanged(QString)));
+    addShortcuts();
     updateHashControls();
     setReadWriteButtonState();
     sectorData = NULL;
@@ -116,6 +118,17 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::addShortcuts() {
+  QShortcut *bF1 = new QShortcut(QKeySequence("F1"), this);
+  connect(bF1, SIGNAL(activated()), bRead, SLOT(click()));
+  
+  QShortcut *bF2 = new QShortcut(QKeySequence("F2"), this);
+  connect(bF2, SIGNAL(activated()), bWrite, SLOT(click()));
+  
+  QShortcut *quit = new QShortcut(QKeySequence("Esc"), this);
+  connect(quit, SIGNAL(activated()), this, SLOT(close()));
+}
+
 void MainWindow::saveSettings()
 {
     QSettings userSettings("HKEY_CURRENT_USER\\Software\\Win32DiskImager", QSettings::NativeFormat);
@@ -154,6 +167,10 @@ void MainWindow::initializeHomeDir()
     if (downloadPath.isEmpty())
         downloadPath = QDir::currentPath();
     myHomeDir = downloadPath;
+}
+
+void MainWindow::filePathTextChanged(QString text) {
+  setReadWriteButtonState();
 }
 
 void MainWindow::setReadWriteButtonState()
@@ -334,10 +351,8 @@ void MainWindow::on_bWrite_clicked()
             qs.replace(QRegExp("[\\[\\]]"), "");
             QByteArray qba = qs.toLocal8Bit();
             const char *ltr = qba.data();
-            if (QMessageBox::warning(this, tr("Confirm overwrite"), tr("Writing to a physical device can corrupt the device.\n"
-                                                                       "(Target Device: %1 \"%2\")\n"
-                                                                       "Are you sure you want to continue?").arg(cboxDevice->currentText()).arg(getDriveLabel(ltr)),
-                                     QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No)
+            QString warnMsg = tr("Writing to a physical device can corrupt the device.\n""(Target Device: %1 \"%2\")\n""Are you sure you want to continue?").arg(cboxDevice->currentText()).arg(getDriveLabel(ltr));
+            if (warnBeforeWrite && QMessageBox::warning(this, tr("Confirm overwrite"), warnMsg, QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::No)
             {
                 return;
             }
@@ -1105,9 +1120,10 @@ void MainWindow::getLogicalDrives()
         {
             // the "A" in drivename will get incremented by the # of bits
             // we've shifted
-            char drivename[] = "\\\\.\\A:\\";
+            char drivename[] = "\\\\.\\D:\\";
             drivename[4] += i;
-            if (checkDriveType(drivename, &pID))
+            bool res = checkDriveType(drivename, &pID);
+            if (res)
             {
                 cboxDevice->addItem(QString("[%1:\\]").arg(drivename[4]), (qulonglong)pID);
             }
@@ -1160,7 +1176,7 @@ bool MainWindow::nativeEvent(const QByteArray &type, void *vMsg, long *result)
                     if (cboxDevice->findText(qs) == -1)
                     {
                         ULONG pID;
-                        char longname[] = "\\\\.\\A:\\";
+                        char longname[] = "\\\\.\\D:\\";
                         longname[4] = ALET;
                         // checkDriveType gets the physicalID
                         if (checkDriveType(longname, &pID))
@@ -1225,5 +1241,9 @@ void MainWindow::on_cboxHashType_IdxChg()
 void MainWindow::on_bHashGen_clicked()
 {
     generateHash(leFile->text().toLatin1().data(),cboxHashType->currentData().toInt());
+}
 
+void MainWindow::setImagePath(QString imagePath) {
+  this->imagePath = imagePath;
+  leFile->setText(imagePath);
 }

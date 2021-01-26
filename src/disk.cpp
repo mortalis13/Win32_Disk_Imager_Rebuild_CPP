@@ -311,6 +311,8 @@ QString getDriveLabel(const char *drv)
 BOOL GetDisksProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTOR pDevDesc,
                       DEVICE_NUMBER *devInfo)
 {
+    qDebug() << "GetDisksProperty()";
+    
     STORAGE_PROPERTY_QUERY Query; // input param for query
     DWORD dwOutBytes; // IOCTL output length
     BOOL bResult; // IOCTL return val
@@ -407,9 +409,13 @@ bool slashify(char *str, char **slash, char **noSlash)
 
 bool GetMediaType(HANDLE hDevice)
 {
+    qDebug() << "GetMediaType()";
+    // temp fix for when 'DeviceIoControl' stucks randomly
+    return true;
+    
     DISK_GEOMETRY diskGeo;
     DWORD cbBytesReturned;
-    if (DeviceIoControl(hDevice, IOCTL_DISK_GET_DRIVE_GEOMETRY,NULL, 0, &diskGeo, sizeof(diskGeo), &cbBytesReturned, NULL))
+    if (DeviceIoControl(hDevice, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &diskGeo, sizeof(diskGeo), &cbBytesReturned, NULL))
     {
         if ((diskGeo.MediaType == FixedMedia) || (diskGeo.MediaType == RemovableMedia))
         {
@@ -435,7 +441,7 @@ bool checkDriveType(char *name, ULONG *pid)
     {
         return(retVal);
     }
-
+    
     driveType = GetDriveType(nameWithSlash);
     switch( driveType )
     {
