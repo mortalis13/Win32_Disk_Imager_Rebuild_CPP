@@ -117,6 +117,18 @@ MainWindow::~MainWindow()
     }
 }
 
+void MainWindow::dragEnterEvent(QDragEnterEvent *event) {
+  qDebug() << ">> dragEnterEvent()";
+  event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event) {
+  qDebug() << ">> dropEvent()";
+  QString text = event->mimeData()->text();
+  text = text.replace("file:///", "");
+  leFile->setText(text);
+  event->acceptProposedAction();
+}
 
 void MainWindow::addShortcuts() {
   QShortcut *bF1 = new QShortcut(QKeySequence("F1"), this);

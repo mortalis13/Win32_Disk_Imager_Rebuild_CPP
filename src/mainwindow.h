@@ -63,6 +63,9 @@ private slots:
         void filePathTextChanged(QString);
 protected:
         MainWindow(QWidget* = NULL);
+        void dragEnterEvent(QDragEnterEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
+        
 private:
         static MainWindow* instance;
         void addShortcuts();
