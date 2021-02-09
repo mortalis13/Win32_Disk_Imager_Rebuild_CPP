@@ -187,6 +187,13 @@ void MainWindow::filePathTextChanged(QString text) {
 
 void MainWindow::setReadWriteButtonState()
 {
+    if (status == STATUS_READING || status == STATUS_WRITING || status == STATUS_VERIFYING) {
+      bRead->setEnabled(false);
+      bWrite->setEnabled(false);
+      bVerify->setEnabled(false);
+      return;
+    }
+    
     bool fileSelected = !(leFile->text().isEmpty());
     bool deviceSelected = (cboxDevice->count() > 0);
     QFileInfo fi(leFile->text());
