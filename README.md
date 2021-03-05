@@ -1,6 +1,7 @@
 # Win32 Disk Imager [Rebuild]
 
 Custom build of the [**Win32 Disk Imager**](https://sourceforge.net/projects/win32diskimager) application for wrinting images to **USB** or **SD Cards**.  
+Check the **README.txt** for the original description.
 
 ## Download
 
